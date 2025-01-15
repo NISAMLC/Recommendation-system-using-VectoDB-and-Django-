@@ -1,0 +1,45 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Recommendations</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+
+  <div class="form-container">
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="form-button">
+        Recommend
+      </button>
+    </form>
+  </div>
+
+  <hr>
+
+  <p>Showing Recommendation for: <strong>{{ search_term }}</strong></p>
+
+  {% if results %}
+    <div class="card-container">
+        {% for course in results %}
+            <div class="card">
+                <h2 class="card-title">{{ course.course_title }}</h2>
+                <p><strong>Course ID:</strong> {{ course.course_id }}</p>
+                <p><strong>Subject:</strong> {{ course.subject }}</p>
+                <p><strong>Price:</strong> {{ course.price }}</p>
+                <p><strong>Score:</strong> {{ course.score|floatformat:2 }}</p>
+                <button class="card-button">View Details</button>
+            </div>
+        {% endfor %}
+    </div>
+
+  {% endif %}
+
+</body>
+</html>

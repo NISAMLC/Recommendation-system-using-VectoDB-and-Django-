@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+{% load customizers %}
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href='{% static "styles.css" %}'>
+</head>
+<style>
+        .highlight{background-color:yellow;}
+    </style>
+<body>
+
+<h3>{{title}}</h3>
+<div>
+    <form action="" method="GET">
+        {{search_filter.form.as_p}}
+
+        <button type="submit">
+            Search
+        </button>
+    </form>
+</div>
+
+<div class="rec">
+    <a href='{% url "recommend" %}'><button>Get Course Recommendation</button></a>
+</div>
+<hr>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in page_obj %}
+        <tr>
+            <td>{{ course.course_id }}</td>
+            <td>{{ course.course_title|highlight_search:search_term}}</td>
+            <td>{{ course.price }}</td>
+            <td>{{ course.subject }}</td>
+            <td>
+                <a href='{% url "read" course.id %}'>view</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No Results Found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+    </span>
+
+    <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    <span class="step-links">
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+</body>
+</html>
